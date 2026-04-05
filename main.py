@@ -9,7 +9,6 @@ st.set_page_config(
     page_icon="👨‍💻"
 )
 
-# Файл для хранения прогресса
 DB_FILE = "user_progress.json"
 
 # ==================== БАЗА ДАННЫХ (ИНФОРМАТИКА) ====================
@@ -21,15 +20,21 @@ def load_data():
                 return json.load(f)
         except: pass
 
-    # Темы с теорией, ссылками на Полякова/РешуЕГЭ и видеоразборами
     return {
         "Информатика": [
             {
                 "id": 1, "class": 9, "type": "ОГЭ", 
                 "name": "Кодирование текста (№1)", 
-                "theory": "Каждый символ весит определенное количество бит (i). Общий объём текста: $I = k \cdot i$. Если кодировка Unicode, то 1 символ = 16 бит (2 байта).", 
-                "link": "https://kpolyakov.spb.ru/school/oge/download.htm",
-                "video": "https://www.youtube.com/watch?v=R0_qNf6O6oM",
+                "theory": """**Суть задания:** Найти объём памяти, который занимает текст.
+                
+**Формула:** $I = k \cdot i$
+- $k$ — количество символов (включая пробелы и знаки препинания).
+- $i$ — вес одного символа (в битах).
+- $I$ — общий информационный объём.
+
+**Важно:** Если в условии сказано 'Unicode', то обычно 1 символ = 16 бит = 2 байта.""", 
+                "link": "https://inf-oge.sdamgia.ru/test?theme=1",
+                "video": "https://www.youtube.com/embed/R0_qNf6O6oM",
                 "question": "Статья из 100 символов весит 800 бит. Сколько бит весит 1 символ?",
                 "answer": "8",
                 "done": False
@@ -37,9 +42,12 @@ def load_data():
             {
                 "id": 2, "class": 11, "type": "ЕГЭ", 
                 "name": "Анализ графов (№1)", 
-                "theory": "Нужно сопоставить таблицу расстояний и схему дорог. Ищи 'уникальные' вершины (например, единственную точку с 3 дорогами).", 
+                "theory": """**Алгоритм решения:**
+1. Посчитай количество дорог у каждой вершины в таблице и на схеме.
+2. Найди 'уникальные' точки (например, единственная вершина, из которой ведут 3 дороги).
+3. Постепенно восстанавливай соответствие между буквами на графе и номерами в таблице.""", 
                 "link": "https://inf-ege.sdamgia.ru/test?theme=221",
-                "video": "https://www.youtube.com/watch?v=mC1yI5qI7eE",
+                "video": "https://www.youtube.com/embed/mC1yI5qI7eE",
                 "question": "Как называется вершина графа, в которую не ведет ни одно ребро?",
                 "answer": "исток",
                 "done": False
@@ -47,21 +55,14 @@ def load_data():
             {
                 "id": 3, "class": 11, "type": "ЕГЭ", 
                 "name": "Логические выражения (№2)", 
-                "theory": "Операции: 1. **И** (/\) - истина только 1+1. 2. **ИЛИ** (\/) - ложь только 0+0. 3. **Следование** (->) - ложь только из 1 в 0.", 
+                "theory": """**Таблица истинности:**
+- **Конъюнкция (∧, И):** Истина (1) только когда оба выражения истинны.
+- **Дизъюнкция (∨, ИЛИ):** Ложь (0) только когда оба ложны.
+- **Импликация (→):** Ложна (0) только в одном случае: из 1 следует 0.""", 
                 "link": "https://kpolyakov.spb.ru/school/ege/gen.php?action=viewAll&topicId=2",
-                "video": "https://www.youtube.com/watch?v=SAn_C_yLp9Y",
-                "question": "Какая операция ложна только тогда, когда из истины следует ложь?",
+                "video": "https://www.youtube.com/embed/SAn_C_yLp9Y",
+                "question": "Какая операция ложна только тогда, когда из 1 следует 0?",
                 "answer": "импликация",
-                "done": False
-            },
-            {
-                "id": 4, "class": 11, "type": "ЕГЭ", 
-                "name": "Кодирование звука и фото (№7)", 
-                "theory": "Фото: $I = X \cdot Y \cdot i$. Звук: $I = f \cdot t \cdot k \cdot i$. Где f - частота, t - время, k - каналы, i - разрешение.", 
-                "link": "https://inf-ege.sdamgia.ru/test?theme=227",
-                "video": "https://www.youtube.com/watch?v=m88L5B-YtB8",
-                "question": "Сколько бит нужно для кодирования 4 цветов?",
-                "answer": "2",
                 "done": False
             }
         ],
@@ -69,10 +70,10 @@ def load_data():
             {
                 "id": 10, "class": 9, "type": "ОГЭ", 
                 "name": "Квадратные уравнения", 
-                "theory": "Формула корней: $x = (-b ± \sqrt{D}) / 2a$, где $D = b^2 - 4ac$.", 
+                "theory": "Уравнение вида $ax^2 + bx + c = 0$. \n\nСначала находим дискриминант: $D = b^2 - 4ac$. \n\nЗатем корни: $x = \\frac{-b \pm \sqrt{D}}{2a}$.", 
                 "link": "https://math-oge.sdamgia.ru/test?theme=23",
-                "video": "https://www.youtube.com/watch?v=7pZbeS2M-n4",
-                "question": "Найдите дискриминант уравнения $x^2 - 4x + 4 = 0$",
+                "video": "https://www.youtube.com/embed/7pZbeS2M-n4",
+                "question": "Найдите D уравнения $x^2 - 6x + 9 = 0$",
                 "answer": "0",
                 "done": False
             }
@@ -89,74 +90,49 @@ if 'db' not in st.session_state:
 # ==================== ИНТЕРФЕЙС ====================
 
 st.sidebar.title("🚀 ExamFlow")
-st.sidebar.markdown("---")
-menu = st.sidebar.radio("Разделы:", ["📊 Статистика", "📅 Мой план", "📚 Теория", "🧠 Тесты"])
-st.sidebar.markdown("---")
+menu = st.sidebar.radio("Разделы:", ["📊 Прогресс", "📅 Планировщик", "📚 Теория", "🧠 Тесты"])
 selected_subject = st.sidebar.selectbox("Предмет:", list(st.session_state.db.keys()))
 
-# --- СТРАНИЦА 1: СТАТИСТИКА ---
-if menu == "📊 Статистика":
-    st.title("📈 Твой прогресс")
+if menu == "📊 Прогресс":
+    st.title("📈 Твой успех")
     all_t = [t for sub in st.session_state.db.values() for t in sub]
-    total = len(all_t)
-    done = sum(1 for t in all_t if t["done"])
-    
-    col1, col2, col3 = st.columns(3)
-    col1.metric("Всего тем", total)
-    col2.metric("Выучено", done)
-    col3.metric("Готовность", f"{int(done/total*100) if total > 0 else 0}%")
-    
+    total, done = len(all_t), sum(1 for t in all_t if t["done"])
+    st.metric("Выполнено", f"{done} из {total}", f"{int(done/total*100)}%" if total > 0 else "0%")
     st.progress(done / total if total > 0 else 0)
-    st.success("Продолжай в том же духе! Каждая отмеченная галочка приближает тебя к бюджету.")
 
-# --- СТРАНИЦА 2: ПЛАНИРОВЩИК ---
-elif menu == "📅 Мой план":
-    st.title(f"📅 Чек-лист: {selected_subject}")
-    st.write("Отмечай темы, которые ты уже разобрал.")
-    
+elif menu == "📅 Планировщик":
+    st.title(f"📅 План: {selected_subject}")
     for i, topic in enumerate(st.session_state.db[selected_subject]):
         c1, c2 = st.columns([4, 1])
-        icon = "✅" if topic["done"] else "⬜"
-        c1.markdown(f"### {icon} {topic['name']}")
-        c1.caption(f"{topic['type']} | {topic['class']} класс")
-        
-        if c2.button("Изменить" , key=f"btn_{topic['id']}"):
+        status = "✅" if topic["done"] else "⬜"
+        c1.markdown(f"### {status} {topic['name']}")
+        if c2.button("Изменить статус", key=f"check_{topic['id']}"):
             st.session_state.db[selected_subject][i]["done"] = not topic["done"]
             save_data()
             st.rerun()
 
-# --- СТРАНИЦА 3: ТЕОРИЯ ---
 elif menu == "📚 Теория":
     st.title(f"📚 База знаний: {selected_subject}")
     for topic in st.session_state.db[selected_subject]:
-        with st.expander(f"🔍 {topic['name']}"):
-            st.markdown(f"**Краткая шпаргалка:**\n\n{topic['theory']}")
-            
-            col1, col2 = st.columns(2)
-            if "link" in topic:
-                col1.link_button("🌐 Подробная теория (сайт)", topic["link"])
-            
+        with st.expander(f"📖 {topic['name']}"):
+            st.markdown(topic["theory"])
+            st.link_button("🌐 Открыть задачи по теме", topic["link"])
             if "video" in topic:
-                st.markdown("---")
-                st.write("📺 **Видеоразбор темы:**")
-                st.video(topic["video"])
+                st.write("---")
+                # Используем iframe для стабильности видео
+                st.components.v1.iframe(topic["video"], height=400)
 
-# --- СТРАНИЦА 4: ТЕСТЫ ---
 elif menu == "🧠 Тесты":
-    st.title(f"🧠 Тренажер: {selected_subject}")
-    subject_topics = st.session_state.db[selected_subject]
+    st.title(f"🧠 Проверка знаний: {selected_subject}")
+    topics = st.session_state.db[selected_subject]
+    target = st.selectbox("Тема вопроса:", [t["name"] for t in topics])
+    current = next(t for t in topics if t["name"] == target)
     
-    target_name = st.selectbox("Выбери тему для теста:", [t["name"] for t in subject_topics])
-    current = next(t for t in subject_topics if t["name"] == target_name)
-    
-    st.info(f"**Вопрос:** {current['question']}")
-    ans = st.text_input("Твой ответ:", key=f"inp_{current['id']}")
-    
-    if st.button("Проверить ответ"):
+    st.warning(f"**Вопрос:** {current['question']}")
+    ans = st.text_input("Твой ответ:")
+    if st.button("Проверить"):
         if ans.lower().strip() == current['answer'].lower():
             st.balloons()
-            st.success("Красавчик! Это правильный ответ.")
+            st.success("Верно!")
         else:
-            st.error(f"Неа, попробуй еще раз. Правильный ответ скрыт в теории!")
-
-# Запуск в терминале: python -m streamlit run main.py
+            st.error("Попробуй еще раз, заглянув в теорию.")

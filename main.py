@@ -97,7 +97,7 @@ st.sidebar.title("🚀 ExamFlow")
 
 # --- ГЕНЕРАЦИЯ QR-КОДА ---
 st.sidebar.markdown("---")
-url = "https://t.me/your_contact" # Твоя ссылка
+url = "https://myexam-nhswaerosug3kbxpkjqcd2.streamlit.app/" # Твоя ссылка
 qr = segno.make(url)
 out = io.BytesIO()
 qr.save(out, kind='png', scale=4)

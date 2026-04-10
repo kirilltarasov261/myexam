@@ -5,92 +5,78 @@ import segno
 import io
 
 # ========================================================
-# 1. НАСТРОЙКИ И ДИЗАЙН
+# 1. НАСТРОЙКИ И ДИЗАЙН (РФМЛИ СТИЛЬ)
 # ========================================================
 st.set_page_config(page_title="ExamFlow | Final Build", layout="wide")
 
 st.markdown("""
     <style>
     .topic-card { 
-        padding: 25px; border-radius: 15px; background-color: #ffffff; 
-        border: 2px solid #000; margin-bottom: 25px; box-shadow: 8px 8px 0px #000;
+        padding: 20px; border-radius: 12px; background-color: #f8f9fa; 
+        border-left: 5px solid #000; margin-bottom: 20px; box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
     }
-    .topic-card h3 { color: #000 !important; font-weight: 900; border-bottom: 2px solid #eee; }
-    .topic-card p, .topic-card b { color: #000 !important; }
-    .stButton>button { background-color: #000; color: #fff; border-radius: 10px; border: none; }
-    .stButton>button:hover { background-color: #444; color: #fff; }
+    .topic-card h3 { color: #1e1e1e !important; font-size: 18px; margin-bottom: 5px; }
+    .topic-card p { color: #444 !important; font-size: 14px; }
+    .stButton>button { width: 100%; border-radius: 8px; }
     </style>
     """, unsafe_allow_html=True)
 
 DB_FILE = "examflow_db.json"
 
 # ========================================================
-# 2. ПОЛНАЯ БАЗА ДАННЫХ (ОГЭ + ЕГЭ)
+# 2. ПОЛНАЯ БАЗА ДАННЫХ С РЕСУРСАМИ
 # ========================================================
 def get_initial_db():
-    db = {
-        "ОГЭ Информатика": [], 
-        "ЕГЭ Информатика": []
-    }
+    db = {"ОГЭ Информатика": [], "ЕГЭ Информатика": []}
 
-    # Данные ОГЭ (1-15)
+    # Данные ОГЭ (1-16)
     oge_raw = [
-        (1, "Кодирование текста", "I = K * i. 1 байт = 8 бит.", [{"q": "Бит в 2 байтах?", "a": "16"}]*5),
-        (2, "Декодирование", "Условие Фано: коды не пересекаются.", [{"q": "А=0, Б=11. Код для В?", "a": "10"}]*5),
-        (3, "Логика", "НЕ(>) это (<=). И - оба верны.", [{"q": "Мин X: НЕ(X < 5) И (X четное)", "a": "6"}]*5),
-        (4, "Графы", "Кратчайший путь по таблице.", [{"q": "А-Б=2, Б-В=3. Путь А-В?", "a": "5"}]*5),
-        (5, "Исполнитель", "Алгоритмы +1, *b.", [{"q": "Из 1 в 10 за (+1, *b). b?", "a": "9"}]*5),
-        (6, "Условия", "Анализ If/Else.", [{"q": "s=5, t=10. s>4 and t>9?", "a": "да"}]*5),
-        (7, "Сети", "Протокол://Сервер/Файл", [{"q": "Разделитель протокола?", "a": "://"}]*5),
-        (8, "Запросы", "N(A|B) = N(A) + N(B) - N(A&B)", [{"q": "А=10, Б=10, А&Б=2. А|Б?", "a": "18"}]*5),
-        (9, "Схемы дорог", "Сумма входящих стрелок.", [{"q": "В А=1. В Б из А. Б=?", "a": "1"}]*5),
-        (10, "Системы счисления", "Перевод в 10-ю систему.", [{"q": "101(2) в 10-й?", "a": "5"}]*5),
-        (11, "Поиск в тексте", "Ctrl+F в документах.", [{"q": "Кнопки поиска?", "a": "ctrl+f"}]*5),
-        (12, "Маски файлов", "* - любая строка, ? - 1 знак.", [{"q": "Один любой символ?", "a": "?"}]*5),
-        (13, "Документы", "Форматирование текста.", [{"q": "Шрифт в 13.2?", "a": "14"}]*5),
-        (14, "Excel таблицы", "СУММЕСЛИ, СЧЁТЕСЛИ.", [{"q": "Среднее значение?", "a": "срзнач"}]*5),
-        (15, "Программирование", "Python: РОБОТ и задачи.", [{"q": "Цикл с условием?", "a": "while"}]*5)
+        (1, "Кодирование текста", "https://yandex.ru/video/search?text=огэ+информатика+задание+1"),
+        (2, "Декодирование (Фано)", "https://yandex.ru/video/search?text=огэ+информатика+задание+2"),
+        (3, "Логика", "https://yandex.ru/video/search?text=огэ+информатика+задание+3"),
+        (4, "Пути в графах", "https://yandex.ru/video/search?text=огэ+информатика+задание+4"),
+        (5, "Исполнитель", "https://yandex.ru/video/search?text=огэ+информатика+задание+5"),
+        (6, "Анализ программ", "https://yandex.ru/video/search?text=огэ+информатика+задание+6"),
+        (7, "Адресация в сети", "https://yandex.ru/video/search?text=огэ+информатика+задание+7"),
+        (8, "Запросы (Круги Эйлера)", "https://yandex.ru/video/search?text=огэ+информатика+задание+8"),
+        (9, "Количество путей", "https://yandex.ru/video/search?text=огэ+информатика+задание+9"),
+        (10, "Системы счисления", "https://yandex.ru/video/search?text=огэ+информатика+задание+10"),
+        (11, "Поиск в файлах", "https://yandex.ru/video/search?text=огэ+информатика+задание+11"),
+        (12, "Свойства файлов", "https://yandex.ru/video/search?text=огэ+информатика+задание+12"),
+        (13, "Презентация или Текст", "https://fipi.ru/oge/otkrytyy-bank-zadaniy-oge"),
+        (14, "Таблицы (Excel)", "https://yandex.ru/video/search?text=огэ+информатика+задание+14"),
+        (15, "Робот (Кумир)", "https://www.youtube.com/results?search_query=огэ+информатика+задание+15+робот"),
+        (16, "Программирование (Python)", "https://www.youtube.com/results?search_query=огэ+информатика+задание+16+питон")
     ]
 
-    # Данные ЕГЭ (Полный список 1-27)
+    # Данные ЕГЭ (1-27)
     ege_raw = [
-        (1, "Анализ графов", "Сопоставление таблицы и схемы дорог.", [{"q": "Степень вершины - это количество...", "a": "дорог"}]*5),
-        (2, "Логические функции", "Построение таблиц истинности.", [{"q": "Импликация в Python?", "a": "<="}]*5),
-        (3, "Базы данных", "Поиск информации в реляционных таблицах.", [{"q": "Ключевое поле - это...", "a": "id"}]*5),
-        (4, "Кодирование (Фано)", "Условие Фано для однозначного декодирования.", [{"q": "Код 01, 011 - верно?", "a": "нет"}]*5),
-        (5, "Анализ алгоритмов", "Двоичная запись и преобразования.", [{"q": "101 в десятичной?", "a": "5"}]*5),
-        (6, "Черепаха", "Анализ геометрических фигур исполнителя.", [{"q": "Повтори 4 [Вперед 10, Направо 90] - это...", "a": "квадрат"}]*5),
-        (7, "Кодирование медиа", "Звук, изображения, объем памяти.", [{"q": "8 бит - это сколько байт?", "a": "1"}]*5),
-        (8, "Комбинаторика", "Перебор слов и сочетаний.", [{"q": "Слов из 3 букв А,Б?", "a": "8"}]*5),
-        (9, "Таблицы (Excel)", "Обработка числовых данных.", [{"q": "Сумма ячеек A1:A10?", "a": "сумм"}]*5),
-        (10, "Поиск в тексте", "Работа с текстовым редактором.", [{"q": "Ctrl+F?", "a": "поиск"}]*5),
-        (11, "Объем информации", "Хранение паролей и идентификаторов.", [{"q": "2 в 7 степени?", "a": "128"}]*5),
-        (12, "Редактор", "Алгоритмы обработки строк.", [{"q": "Заменить(А, Б)?", "a": "да"}]*5),
-        (13, "IP-адреса", "Маски подсети и адресация узлов.", [{"q": "Бит в IPv4?", "a": "32"}]*5),
-        (14, "Позиционные системы", "Выражения в различных системах счисления.", [{"q": "Основание системы?", "a": "база"}]*5),
-        (15, "Логические выражения", "Отрезки, множества, делимость.", [{"q": "Конъюнкция - это...", "a": "и"}]*5),
-        (16, "Рекурсия", "Вычисление значений рекурсивных функций.", [{"q": "Функция вызывает себя?", "a": "да"}]*5),
-        (17, "Обработка массивов", "Поиск пар чисел в последовательности.", [{"q": "Остаток от деления %?", "a": "мод"}]*5),
-        (18, "Робот-сборщик", "Динамическое программирование в Excel.", [{"q": "Макс сумма?", "a": "макс"}]*5),
-        (19, "Теория игр (1)", "Выигрышная стратегия за 1 ход.", [{"q": "Кто ходит первым?", "a": "петя"}]*5),
-        (20, "Теория игр (2)", "Выигрышная стратегия за 2 хода.", [{"q": "Кто выигрывает?", "a": "ваня"}]*5),
-        (21, "Теория игр (3)", "Стратегия Вани.", [{"q": "Миним. камней?", "a": "число"}]*5),
-        (22, "Многопроцессорность", "Параллельные процессы.", [{"q": "Время выполнения?", "a": "мс"}]*5),
-        (23, "Динамика", "Количество путей от А до Б.", [{"q": "Команды +1, *2?", "a": "пути"}]*5),
-        (24, "Строки", "Максимальная длина подстроки.", [{"q": "Функция длины в Python?", "a": "len"}]*5),
-        (25, "Маски и делители", "Обработка целых чисел по маске.", [{"q": "Знак любого символа?", "a": "?"}]*5),
-        (26, "Сортировка", "Обработка больших объемов данных.", [{"q": "Метод sort()?", "a": "да"}]*5),
-        (27, "Анализ данных", "Эффективные алгоритмы (О(N)).", [{"q": "Сложность O(N^2) - плохо?", "a": "да"}]*5)
+        (1, "Графы", "https://kompege.ru/"), (2, "Логика", "https://kompege.ru/"),
+        (3, "БД", "https://fipi.ru/"), (4, "Фано", "https://kompege.ru/"),
+        (5, "Алгоритмы", "https://yandex.ru/video/search?text=егэ+информатика+задание+5"),
+        (6, "Черепаха", "https://yandex.ru/video/search?text=егэ+информатика+задание+6"),
+        (7, "Медиа", "https://kompege.ru/"), (8, "Комбинаторика", "https://kompege.ru/"),
+        (9, "Таблицы", "https://fipi.ru/"), (10, "Поиск", "https://fipi.ru/"),
+        (11, "Объем памяти", "https://kompege.ru/"), (12, "Редактор", "https://kompege.ru/"),
+        (13, "Сети (IP)", "https://yandex.ru/video/search?text=егэ+информатика+задание+13"),
+        (14, "Системы счисления", "https://kompege.ru/"), (15, "Логика (Отрезки)", "https://kompege.ru/"),
+        (16, "Рекурсия", "https://kompege.ru/"), (17, "Массивы", "https://kompege.ru/"),
+        (18, "Робот", "https://fipi.ru/"), (19, "Игры-1", "https://kompege.ru/"),
+        (20, "Игры-2", "https://kompege.ru/"), (21, "Игры-3", "https://kompege.ru/"),
+        (22, "Процессы", "https://kompege.ru/"), (23, "Динамика", "https://kompege.ru/"),
+        (24, "Строки", "https://kompege.ru/"), (25, "Числа", "https://kompege.ru/"),
+        (26, "Сортировка", "https://kompege.ru/"), (27, "Анализ данных", "https://kompege.ru/")
     ]
 
-    for n, name, theory, qs in oge_raw:
-        db["ОГЭ Информатика"].append({"id": f"o{n}", "name": f"{n}. {name}", "theory": theory, "done": False, "questions": qs})
-    for n, name, theory, qs in sorted(ege_raw, key=lambda x: x[0]):
-        db["ЕГЭ Информатика"].append({"id": f"e{n}", "name": f"{n}. {name}", "theory": theory, "done": False, "questions": qs})
-
+    for n, name, url in oge_raw:
+        db["ОГЭ Информатика"].append({"id": f"o{n}", "name": f"{n}. {name}", "url": url, "done": False})
+    for n, name, url in ege_raw:
+        db["ЕГЭ Информатика"].append({"id": f"e{n}", "name": f"{n}. {name}", "url": url, "done": False})
     return db
 
-# --- ОСТАЛЬНАЯ ЛОГИКА (БЕЗ ИЗМЕНЕНИЙ) ---
+# ========================================================
+# 3. ЛОГИКА И ИНТЕРФЕЙС
+# ========================================================
 def load_data():
     if os.path.exists(DB_FILE):
         with open(DB_FILE, "r", encoding="utf-8") as f: return json.load(f)
@@ -104,66 +90,47 @@ if 'db' not in st.session_state:
     st.session_state.db = load_data()
 
 st.sidebar.title("🚀 ExamFlow")
-
 st.sidebar.markdown("---")
-# Ссылка на твой сайт для QR
+
+# Генерация QR
 qr_url = "https://kirill-myexam.streamlit.app"
 qr = segno.make(qr_url)
 out = io.BytesIO()
 qr.save(out, kind='png', scale=4)
-st.sidebar.image(out.getvalue(), caption="Мобильная версия")
+st.sidebar.image(out.getvalue(), caption="Версия для комиссии")
 
-subj = st.sidebar.selectbox("Выберите экзамен:", list(st.session_state.db.keys()))
-menu = st.sidebar.radio("Меню:", ["📊 Прогресс", "📖 Обучение", "🧠 Тренажёр"])
+subj = st.sidebar.selectbox("Экзамен:", list(st.session_state.db.keys()))
+menu = st.sidebar.radio("Навигация:", ["📊 Мой Прогресс", "📖 Обучение"])
 
 current_list = st.session_state.db[subj]
 
-if menu == "📊 Прогресс":
-    st.title(f"Ваш успех в {subj}")
+if menu == "📊 Мой Прогресс":
+    st.title(f"Прогресс по {subj}")
     done = sum(1 for t in current_list if t["done"])
-    st.metric("Пройдено тем", f"{done} / {len(current_list)}")
+    col1, col2 = st.columns(2)
+    col1.metric("Пройдено тем", f"{done} / {len(current_list)}")
+    col2.metric("Готовность", f"{int(done/len(current_list)*100)}%")
     st.progress(done / len(current_list))
+    
+    st.markdown("### Чек-лист заданий")
     for t in current_list:
         st.write(f"{'✅' if t['done'] else '⬜'} {t['name']}")
 
 elif menu == "📖 Обучение":
-    st.title("📚 Теория")
+    st.title("📚 Материалы и ресурсы")
     for t in current_list:
         with st.container():
-            st.markdown(f'<div class="topic-card"><h3>{t["name"]}</h3><p>{t["theory"]}</p></div>', unsafe_allow_html=True)
-            if st.button(f"Изучено: {t['name']}", key=f"btn_{t['id']}"):
+            st.markdown(f'''
+            <div class="topic-card">
+                <h3>{t["name"]}</h3>
+                <p><a href="{t["url"]}" target="_blank">🔗 Перейти к разбору задания</a></p>
+            </div>
+            ''', unsafe_allow_html=True)
+            if st.button(f"Отметить как изученное: {t['name']}", key=f"btn_{t['id']}"):
                 t["done"] = not t["done"]
                 save_data(); st.rerun()
 
-elif menu == "🧠 Тренажёр":
-    st.title("⚡ Проверка знаний")
-    topic_name = st.selectbox("Тема:", [t['name'] for t in current_list])
-    target = next(t for t in current_list if t['name'] == topic_name)
-    
-    q_idx = st.session_state.get(f"q_{target['id']}", 0)
-    
-    if q_idx < 5:
-        q_data = target['questions'][q_idx]
-        st.info(f"Вопрос {q_idx + 1} из 5")
-        st.write(f"### {q_data['q']}")
-        ans = st.text_input("Ответ:", key=f"input_{target['id']}_{q_idx}")
-        if st.button("Проверить"):
-            if ans.strip().lower() == q_data['a'].lower():
-                st.session_state[f"q_{target['id']}"] = q_idx + 1
-                st.success("Верно!")
-                st.rerun()
-            else:
-                st.error("Ошибка, подумай еще.")
-    else:
-        st.balloons()
-        st.success("Тема пройдена!")
-        target["done"] = True
-        save_data()
-        if st.button("Сбросить тест"):
-            st.session_state[f"q_{target['id']}"] = 0
-            st.rerun()
-
-if st.sidebar.button("🗑 Сбросить всё"):
+if st.sidebar.button("🗑 Очистить историю"):
     if os.path.exists(DB_FILE): os.remove(DB_FILE)
     st.session_state.clear()
     st.rerun()

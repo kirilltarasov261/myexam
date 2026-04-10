@@ -95,7 +95,7 @@ def save():
 st.sidebar.title("🚀 ExamFlow")
 
 # БЛОК QR-КОДА
-qr_url = "https://kirill-myexam.streamlit.app" # Сюда вставь свою ссылку
+qr_url = "https://myexam-rpxmihxm3ypamwdczibkkq.streamlit.app/" # Сюда вставь свою ссылку
 qr = segno.make(qr_url)
 out = io.BytesIO()
 qr.save(out, kind='png', scale=4)
